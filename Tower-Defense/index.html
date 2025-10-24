@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tower Defense</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <!-- Main Menu Page -->
+        <div id="menu-page" class="page">
+            <div class="menu-container">
+                <h1>Tower Defense</h1>
+                <div class="menu-buttons">
+                    <button id="start-game-btn" class="menu-btn">
+                        Start Game
+                    </button>
+                    <button id="view-tiles-btn" class="menu-btn">
+                        View Tiles
+                    </button>
+                    <button id="settings-btn" class="menu-btn">Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Page -->
+        <div id="game-page" class="page hidden">
+            <div class="game-header">
+                <button id="back-to-menu-btn" class="header-btn">← Menu</button>
+                <div class="game-stats">
+                    <span>Health: <span id="health">100</span></span>
+                    <span>Gold: <span id="gold">500</span></span>
+                    <span>Wave: <span id="wave">1</span></span>
+                </div>
+            </div>
+            <div class="game-container">
+                <canvas
+                    id="backgroundCanvas"
+                    width="1280"
+                    height="720"
+                ></canvas>
+                <canvas id="gameCanvas" width="1280" height="720"></canvas>
+            </div>
+        </div>
+
+        <!-- Tile Viewer Page -->
+        <div id="tiles-page" class="page hidden">
+            <div class="page-header">
+                <button id="back-to-menu-tiles-btn" class="header-btn">
+                    ← Menu
+                </button>
+                <h2>Tile Viewer</h2>
+            </div>
+            <div class="tiles-container">
+                <canvas id="tilesCanvas" width="1500" height="900"></canvas>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page hidden">
+            <div class="settings-container">
+                <button id="back-to-menu-settings-btn" class="header-btn">
+                    ← Menu
+                </button>
+                <h2>Settings</h2>
+                <div class="settings-content">
+                    <label>
+                        <input type="checkbox" id="sound-toggle" checked />
+                        Sound Effects
+                    </label>
+                    <label>
+                        <input type="checkbox" id="music-toggle" checked />
+                        Music
+                    </label>
+                    <label>
+                        Volume:
+                        <input
+                            type="range"
+                            id="volume-slider"
+                            min="0"
+                            max="100"
+                            value="50"
+                        />
+                        <span id="volume-value">50</span>%
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="./src/main.ts"></script>
+    </body>
+</html>
