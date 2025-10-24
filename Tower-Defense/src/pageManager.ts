@@ -5,7 +5,8 @@ export type PageName = "menu" | "game" | "tiles" | "settings";
 class PageManager {
     private currentPage: PageName = "menu";
     private pages: Map<PageName, HTMLElement>;
-    private onPageChangeCallbacks: Map<PageName, (() => void)[]> = new Map();
+    private onPageEnterCallbacks: Map<PageName, (() => void)[]> = new Map();
+    private onPageExitCallbacks: Map<PageName, (() => void)[]> = new Map();
 
     constructor() {
         this.pages = new Map([
@@ -15,9 +16,10 @@ class PageManager {
             ["settings", document.getElementById("settings-page")!],
         ]);
 
-        // Initialize callbacks map
+        // Initialize callbacks maps
         for (const pageName of this.pages.keys()) {
-            this.onPageChangeCallbacks.set(pageName, []);
+            this.onPageEnterCallbacks.set(pageName, []);
+            this.onPageExitCallbacks.set(pageName, []);
         }
     }
 
@@ -25,6 +27,11 @@ class PageManager {
      * Switch to a different page
      */
     showPage(pageName: PageName): void {
+        // Trigger exit callbacks for current page
+        const exitCallbacks =
+            this.onPageExitCallbacks.get(this.currentPage) || [];
+        exitCallbacks.forEach((callback) => callback());
+
         // Hide current page
         const currentPageElement = this.pages.get(this.currentPage);
         if (currentPageElement) {
@@ -37,9 +44,10 @@ class PageManager {
             newPageElement.classList.remove("hidden");
             this.currentPage = pageName;
 
-            // Trigger callbacks for this page
-            const callbacks = this.onPageChangeCallbacks.get(pageName) || [];
-            callbacks.forEach((callback) => callback());
+            // Trigger enter callbacks for new page
+            const enterCallbacks =
+                this.onPageEnterCallbacks.get(pageName) || [];
+            enterCallbacks.forEach((callback) => callback());
         } else {
             console.error(`Page "${pageName}" not found`);
         }
@@ -53,10 +61,20 @@ class PageManager {
     }
 
     /**
-     * Register a callback to be called when switching to a specific page
+     * Register a callback to be called when entering a specific page
      */
-    onPageChange(pageName: PageName, callback: () => void): void {
-        const callbacks = this.onPageChangeCallbacks.get(pageName);
+    onPageEnter(pageName: PageName, callback: () => void): void {
+        const callbacks = this.onPageEnterCallbacks.get(pageName);
+        if (callbacks) {
+            callbacks.push(callback);
+        }
+    }
+
+    /**
+     * Register a callback to be called when exiting a specific page
+     */
+    onPageExit(pageName: PageName, callback: () => void): void {
+        const callbacks = this.onPageExitCallbacks.get(pageName);
         if (callbacks) {
             callbacks.push(callback);
         }
